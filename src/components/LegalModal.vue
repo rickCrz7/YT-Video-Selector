@@ -38,7 +38,7 @@ const activeTab = ref<'privacy' | 'terms'>(props.initialTab)
 
           <h3>1. Overview</h3>
           <p>
-            This Privacy Policy describes how the YouTube Video Selector app ("the App") handles data.
+            This Privacy Policy describes how the YT Video Selector app ("the App") handles data.
             The App is a client-side web application that runs entirely in your browser. It does not
             have a backend server, a database, or any server-side infrastructure.
           </p>
@@ -126,7 +126,7 @@ const activeTab = ref<'privacy' | 'terms'>(props.initialTab)
 
           <h3>1. Acceptance of Terms</h3>
           <p>
-            By using the YouTube Video Selector app ("the App"), you agree to these Terms of Service.
+            By using the YT Video Selector app ("the App"), you agree to these Terms of Service.
             If you do not agree, do not use the App. The App is open-source software licensed under
             the MIT License.
           </p>

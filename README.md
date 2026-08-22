@@ -1,4 +1,4 @@
-# YouTube Video Selector
+# YT Video Selector
 
 A client-side video curation app for creating themed pages of YouTube videos. Paste YouTube links, organize them into pages, and present them in a clean, distraction-free grid.
 
