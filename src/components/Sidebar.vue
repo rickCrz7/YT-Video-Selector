@@ -240,7 +240,7 @@ function cancelEdit() {
     position: relative;
   }
   .sidebar-footer {
-    display: none; 
+    display: none;
   }
 }
 </style>
