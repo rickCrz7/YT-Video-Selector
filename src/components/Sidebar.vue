@@ -8,10 +8,11 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  select: [id: string]
-  add: []
-  rename: [id: string]
-  remove: [id: string]
+  (e: 'select', id: string): void
+  (e: 'add'): void
+  (e: 'rename', id: string): void
+  (e: 'remove', id: string): void
+  (e: 'openLegal', tab: 'privacy' | 'terms'): void
 }>()
 </script>
 
@@ -43,6 +44,14 @@ const emit = defineEmits<{
       </li>
     </ul>
     <p v-if="pages.length === 0" class="empty-text">No pages yet. Click + to create one.</p>
+
+    <div class="sidebar-footer">
+      <button class="footer-link" @click="emit('openLegal', 'privacy')">Privacy Policy</button>
+      <span class="footer-sep">·</span>
+      <button class="footer-link" @click="emit('openLegal', 'terms')">Terms of Service</button>
+      <span class="footer-sep">·</span>
+      <span class="footer-license">MIT License</span>
+    </div>
   </aside>
 </template>
 
@@ -58,6 +67,8 @@ const emit = defineEmits<{
   position: sticky;
   top: 0;
   transition: margin-left 0.25s ease;
+  display: flex;
+  flex-direction: column;
 }
 .sidebar-header {
   display: flex;
@@ -140,6 +151,37 @@ const emit = defineEmits<{
   padding: 8px 4px;
 }
 
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.footer-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+.footer-link:hover {
+  color: var(--accent);
+}
+.footer-sep {
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+.footer-license {
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -147,6 +189,9 @@ const emit = defineEmits<{
     border-right: none;
     border-bottom: 1px solid var(--border);
     position: relative;
+  }
+  .sidebar-footer {
+    display: none;
   }
 }
 </style>

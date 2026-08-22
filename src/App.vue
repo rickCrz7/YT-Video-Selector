@@ -240,6 +240,7 @@ function onVideoDrop(videoId: string) {
       @add="addPage"
       @rename="renamePage"
       @remove="removePage"
+      @open-legal="openLegal"
     />
 
     <main class="main-content">
@@ -328,6 +329,14 @@ function onVideoDrop(videoId: string) {
         <p>No pages yet.</p>
         <p class="empty-hint">Use the + button in the sidebar to create a page.</p>
       </div>
+
+      <footer class="mobile-footer">
+        <button class="footer-link" @click="openLegal('privacy')">Privacy Policy</button>
+        <span class="footer-sep">·</span>
+        <button class="footer-link" @click="openLegal('terms')">Terms of Service</button>
+        <span class="footer-sep">·</span>
+        <span class="footer-license">Open-source under MIT License</span>
+      </footer>
     </main>
 
     <PlayerModal :video="playingVideo" @close="closePlayer" />
@@ -347,13 +356,6 @@ function onVideoDrop(videoId: string) {
       @accept="acceptConsent"
       @learn-more="openLegal('privacy')"
     />
-    <footer class="app-footer">
-      <button class="footer-link" @click="openLegal('privacy')">Privacy Policy</button>
-      <span class="footer-sep">·</span>
-      <button class="footer-link" @click="openLegal('terms')">Terms of Service</button>
-      <span class="footer-sep">·</span>
-      <span class="footer-license">Open-source under MIT License</span>
-    </footer>
   </div>
 </template>
 
@@ -367,6 +369,10 @@ function onVideoDrop(videoId: string) {
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+.main-content > .page-content,
+.main-content > .empty-state {
+  flex: 1;
 }
 .top-bar {
   display: flex;
@@ -559,14 +565,15 @@ function onVideoDrop(videoId: string) {
   font-size: 0.875rem !important;
 }
 
-.app-footer {
-  display: flex;
+.mobile-footer {
+  display: none;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
+  gap: 6px;
+  padding: 12px 16px;
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
+  margin-top: auto;
 }
 .footer-link {
   background: none;
@@ -605,6 +612,9 @@ function onVideoDrop(videoId: string) {
   }
   .page-title {
     font-size: 1.25rem;
+  }
+  .mobile-footer {
+    display: flex;
   }
 }
 </style>
