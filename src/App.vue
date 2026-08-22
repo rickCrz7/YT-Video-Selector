@@ -85,9 +85,7 @@ onMounted(() => {
     const seedPage: Page = {
       id: generateId(),
       title: 'My First Page',
-      videos: [
-        { id: generateId(), youtubeId: 'dQw4w9WgXcQ', title: 'Rick Astley - Never Gonna Give You Up' },
-      ],
+      videos: [],
     }
     data.value = { pages: [seedPage] }
     activePageId.value = seedPage.id
