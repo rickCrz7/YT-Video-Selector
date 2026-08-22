@@ -44,14 +44,14 @@ A client-side video curation app for creating themed pages of YouTube videos. Pa
 ## Getting Started
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The dev server starts automatically. For production builds:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ## License
