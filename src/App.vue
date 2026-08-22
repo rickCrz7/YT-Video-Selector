@@ -312,8 +312,6 @@ function onVideoDrop(videoId: string) {
           <button class="icon-toggle" @click="toggleSidebar" :title="settings.sidebarVisible ? 'Hide sidebar' : 'Show sidebar'">
             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" /></svg>
           </button>
-          <h1 v-if="activePage && editMode" class="page-title">{{ activePage.title }}</h1>
-          <h1 v-else-if="!editMode" class="page-title muted-placeholder"></h1>
         </div>
         <div class="top-bar-center">
           <h1 v-if="activePage" class="page-title">{{ activePage.title }}</h1>
@@ -360,7 +358,7 @@ function onVideoDrop(videoId: string) {
             :title="editMode ? 'Present mode' : 'Edit mode'"
           >
             <svg v-if="!editMode" viewBox="0 0 24 24" width="20" height="20"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
-            <svg v-else viewBox="0 0 24 24" width="20" height="20"><path d="M12 1l-9 4v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" /></svg>
+            <svg v-else viewBox="0 0 24 24" width="20" height="20"><path d="M21 3H3c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 13H3V5h18v11z" /></svg>
           </button>
         </div>
       </header>
