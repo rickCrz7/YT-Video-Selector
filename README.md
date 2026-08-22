@@ -1,4 +1,4 @@
-# YouTube Video Selector
+# YT Video Selector
 
 A client-side video curation app for creating themed pages of YouTube videos. Paste YouTube links, organize them into pages, and present them in a clean, distraction-free grid.
 
@@ -44,14 +44,14 @@ A client-side video curation app for creating themed pages of YouTube videos. Pa
 ## Getting Started
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The dev server starts automatically. For production builds:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ## License
