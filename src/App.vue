@@ -10,6 +10,7 @@ import PlayerModal from './components/PlayerModal.vue'
 import SettingsModal from './components/SettingsModal.vue'
 import LegalModal from './components/LegalModal.vue'
 import ConsentBanner from './components/ConsentBanner.vue'
+import ConfirmModal from './components/ConfirmModal.vue'
 
 const data = ref<AppData>({ pages: [] })
 const activePageId = ref<string | null>(null)
@@ -20,6 +21,22 @@ const editMode = ref(false)
 const showSettings = ref(false)
 const showLegal = ref(false)
 const legalTab = ref<'privacy' | 'terms'>('privacy')
+
+const confirmState = ref<{
+  open: boolean
+  title: string
+  message: string
+  confirmText: string
+  danger: boolean
+  action: (() => void) | null
+}>({
+  open: false,
+  title: '',
+  message: '',
+  confirmText: '',
+  danger: false,
+  action: null,
+})
 
 const defaultSettings: Settings = {
   gridColumns: 3,
@@ -93,23 +110,26 @@ function addPage() {
   activePageId.value = newPage.id
 }
 
-function renamePage(id: string) {
+function renamePage(id: string, newTitle: string) {
   const page = data.value.pages.find((p) => p.id === id)
-  if (!page) return
-  const newName = window.prompt('Rename page:', page.title)
-  if (newName !== null && newName.trim()) {
-    page.title = newName.trim()
-  }
+  if (page) page.title = newTitle
 }
 
 function removePage(id: string) {
   const page = data.value.pages.find((p) => p.id === id)
   if (!page) return
-  if (!window.confirm(`Delete page "${page.title}" and all its videos?`)) return
-  data.value.pages = data.value.pages.filter((p) => p.id !== id)
-  if (activePageId.value === id) {
-    activePageId.value = data.value.pages[0]?.id ?? null
-  }
+  openConfirm(
+    'Delete page?',
+    `"${page.title}" and all its videos will be permanently deleted.`,
+    'Delete',
+    true,
+    () => {
+      data.value.pages = data.value.pages.filter((p) => p.id !== id)
+      if (activePageId.value === id) {
+        activePageId.value = data.value.pages[0]?.id ?? null
+      }
+    }
+  )
 }
 
 function addVideo(video: VideoItem) {
@@ -118,8 +138,18 @@ function addVideo(video: VideoItem) {
 }
 
 function removeVideo(videoId: string) {
-  if (!activePage.value) return
-  activePage.value.videos = activePage.value.videos.filter((v) => v.id !== videoId)
+  const video = activePage.value?.videos.find((v) => v.id === videoId)
+  if (!video) return
+  openConfirm(
+    'Delete video?',
+    `"${video.title}" will be removed from this page.`,
+    'Delete',
+    true,
+    () => {
+      if (!activePage.value) return
+      activePage.value.videos = activePage.value.videos.filter((v) => v.id !== videoId)
+    }
+  )
 }
 
 function renameVideo(videoId: string, newTitle: string) {
@@ -150,15 +180,19 @@ async function handleImport(event: Event) {
   if (!file) return
   try {
     const imported = await importDataFromFile(file)
-    if (!window.confirm('Importing will replace your current collection. Continue?')) {
-      input.value = ''
-      return
-    }
-    data.value = { pages: imported.pages }
-    if (imported.settings) {
-      settings.value = { ...defaultSettings, ...imported.settings }
-    }
-    activePageId.value = imported.pages[0]?.id ?? null
+    openConfirm(
+      'Import collection?',
+      'Importing will replace your current collection. This cannot be undone.',
+      'Import',
+      true,
+      () => {
+        data.value = { pages: imported.pages }
+        if (imported.settings) {
+          settings.value = { ...defaultSettings, ...imported.settings }
+        }
+        activePageId.value = imported.pages[0]?.id ?? null
+      }
+    )
   } catch (e) {
     window.alert((e as Error).message)
   }
@@ -166,10 +200,17 @@ async function handleImport(event: Event) {
 }
 
 function handleReset() {
-  if (!window.confirm('This will delete ALL pages and videos. This cannot be undone. Continue?')) return
-  clearData()
-  data.value = { pages: [] }
-  activePageId.value = null
+  openConfirm(
+    'Reset everything?',
+    'This will delete ALL pages and videos. This cannot be undone.',
+    'Reset',
+    true,
+    () => {
+      clearData()
+      data.value = { pages: [] }
+      activePageId.value = null
+    }
+  )
 }
 
 function toggleSidebar() {
@@ -187,6 +228,28 @@ function acceptConsent() {
 function openLegal(tab: 'privacy' | 'terms') {
   legalTab.value = tab
   showLegal.value = true
+}
+
+function openConfirm(title: string, message: string, confirmText: string, danger: boolean, action: () => void) {
+  confirmState.value = {
+    open: true,
+    title,
+    message,
+    confirmText,
+    danger,
+    action,
+  }
+}
+
+function onConfirm() {
+  confirmState.value.action?.()
+  confirmState.value.open = false
+  confirmState.value.action = null
+}
+
+function onCancelConfirm() {
+  confirmState.value.open = false
+  confirmState.value.action = null
 }
 
 const gridStyle = computed(() => ({
@@ -249,6 +312,8 @@ function onVideoDrop(videoId: string) {
           <button class="icon-toggle" @click="toggleSidebar" :title="settings.sidebarVisible ? 'Hide sidebar' : 'Show sidebar'">
             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" /></svg>
           </button>
+          <h1 v-if="activePage && editMode" class="page-title">{{ activePage.title }}</h1>
+          <h1 v-else-if="!editMode" class="page-title muted-placeholder"></h1>
         </div>
         <div class="top-bar-center">
           <h1 v-if="activePage" class="page-title">{{ activePage.title }}</h1>
@@ -289,11 +354,13 @@ function onVideoDrop(videoId: string) {
             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" /></svg>
           </button>
           <button
-            class="mode-toggle"
+            class="icon-toggle mode-toggle"
             :class="{ presenting: !editMode }"
             @click="editMode = !editMode"
+            :title="editMode ? 'Present mode' : 'Edit mode'"
           >
-            {{ editMode ? 'Present' : 'Edit' }}
+            <svg v-if="!editMode" viewBox="0 0 24 24" width="20" height="20"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
+            <svg v-else viewBox="0 0 24 24" width="20" height="20"><path d="M12 1l-9 4v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" /></svg>
           </button>
         </div>
       </header>
@@ -351,6 +418,15 @@ function onVideoDrop(videoId: string) {
       :initial-tab="legalTab"
       @close="showLegal = false"
     />
+    <ConfirmModal
+      v-if="confirmState.open"
+      :title="confirmState.title"
+      :message="confirmState.message"
+      :confirm-text="confirmState.confirmText"
+      :danger="confirmState.danger"
+      @confirm="onConfirm"
+      @cancel="onCancelConfirm"
+    />
     <ConsentBanner
       v-if="!settings.consentAccepted"
       @accept="acceptConsent"
@@ -384,7 +460,6 @@ function onVideoDrop(videoId: string) {
   background: var(--bg);
   z-index: 10;
   gap: 12px;
-  flex-wrap: wrap;
 }
 .top-bar.presenting {
   justify-content: space-between;
@@ -405,10 +480,7 @@ function onVideoDrop(videoId: string) {
   display: none;
 }
 .top-bar:not(.presenting) .top-bar-left {
-  gap: 12px;
-}
-.top-bar:not(.presenting) .page-title {
-  display: none;
+  flex: 1;
 }
 .top-bar-right {
   display: flex;
@@ -416,6 +488,7 @@ function onVideoDrop(videoId: string) {
   gap: 8px;
   flex-wrap: wrap;
   flex-shrink: 0;
+  margin-left: auto;
 }
 .icon-toggle {
   background: none;
@@ -446,6 +519,9 @@ function onVideoDrop(videoId: string) {
 }
 .page-title.muted {
   color: var(--text-muted);
+}
+.muted-placeholder {
+  display: none;
 }
 .control-group {
   display: flex;
@@ -518,20 +594,14 @@ function onVideoDrop(videoId: string) {
   border-color: var(--danger);
 }
 .mode-toggle {
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: 1px solid var(--accent);
+  border-color: var(--accent);
   background: var(--accent);
   color: #fff;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-  white-space: nowrap;
 }
 .mode-toggle:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  color: #fff;
 }
 .mode-toggle.presenting {
   background: var(--surface);
@@ -540,6 +610,7 @@ function onVideoDrop(videoId: string) {
 }
 .mode-toggle.presenting:hover {
   background: var(--surface-hover);
+  color: var(--accent);
 }
 .hidden-input {
   display: none;
