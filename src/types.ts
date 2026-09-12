@@ -15,6 +15,7 @@ export type ThemeMode = 'dark' | 'light'
 export interface Settings {
   gridColumns: number
   showThumbnails: boolean
+  showNumbers: boolean
   theme: ThemeMode
   fontSize: number
   sidebarVisible: boolean

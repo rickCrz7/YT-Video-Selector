@@ -6,6 +6,8 @@ import { getThumbnail } from "../utils/youtube";
 const props = defineProps<{
   video: VideoItem;
   showThumbnail: boolean;
+  showNumbers: boolean;
+  index: number;
   editable: boolean;
   dragging: boolean;
   isDragOver: boolean;
@@ -104,6 +106,7 @@ function onDrop(e: DragEvent) {
           <path d="M20 9H4v2h16V9zM4 15h16v-2H4v2z" />
         </svg>
       </div>
+      <span v-if="showNumbers" class="video-number">{{ index + 1 }}.</span>
       <p
         v-if="!isEditing"
         class="video-title"
@@ -256,6 +259,16 @@ function onDrop(e: DragEvent) {
 .video-card.no-thumb .video-info {
   padding: 18px 14px;
   align-items: center;
+}
+.video-number {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.video-card.no-thumb .video-number {
+  font-size: 1rem;
 }
 .video-title {
   flex: 1;

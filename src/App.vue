@@ -41,6 +41,7 @@ const confirmState = ref<{
 const defaultSettings: Settings = {
   gridColumns: 3,
   showThumbnails: true,
+  showNumbers: true,
   theme: 'dark',
   fontSize: 16,
   sidebarVisible: true,
@@ -335,6 +336,14 @@ function onVideoDrop(videoId: string) {
             >
               <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" /></svg>
             </button>
+            <button
+              class="toggle-btn"
+              :class="{ active: settings.showNumbers }"
+              @click="settings.showNumbers = !settings.showNumbers"
+              :title="settings.showNumbers ? 'Hide numbers' : 'Show numbers'"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V5H2v1h1v1zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v1h14V5H7zm0 14h14v-1H7v1zm0-6h14v-1H7v1z" /></svg>
+            </button>
             <button class="toolbar-btn" @click="handleExport">Export</button>
             <button class="toolbar-btn" @click="triggerImport">Import</button>
             <button class="toolbar-btn danger" @click="handleReset">Reset</button>
@@ -366,10 +375,12 @@ function onVideoDrop(videoId: string) {
 
         <div v-if="activePage.videos.length > 0" class="video-grid" :style="gridStyle">
           <VideoCard
-            v-for="video in activePage.videos"
+            v-for="(video, index) in activePage.videos"
             :key="video.id"
             :video="video"
             :show-thumbnail="settings.showThumbnails"
+            :show-numbers="settings.showNumbers"
+            :index="index"
             :editable="editMode"
             :dragging="draggedVideoId === video.id"
             :is-drag-over="dragOverVideoId === video.id"
