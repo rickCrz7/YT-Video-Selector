@@ -30,4 +30,4 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style scoped src="./ConfirmModal.css"></style>
+<style scoped src="../styles/components/ConfirmModal.css"></style>

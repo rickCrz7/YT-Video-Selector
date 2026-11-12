@@ -65,4 +65,4 @@ async function handleSubmit() {
   </div>
 </template>
 
-<style scoped src="./AddVideoForm.css"></style>
+<style scoped src="../styles/components/AddVideoForm.css"></style>

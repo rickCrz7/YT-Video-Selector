@@ -103,4 +103,4 @@ function changeGridColumns(event: Event) {
   </header>
 </template>
 
-<style scoped src="./PageToolbar.css"></style>
+<style scoped src="../styles/components/PageToolbar.css"></style>

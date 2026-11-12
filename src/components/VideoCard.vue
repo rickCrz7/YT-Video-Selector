@@ -155,4 +155,4 @@ function onDrop(e: DragEvent) {
   </div>
 </template>
 
-<style scoped src="./VideoCard.css"></style>
+<style scoped src="../styles/components/VideoCard.css"></style>

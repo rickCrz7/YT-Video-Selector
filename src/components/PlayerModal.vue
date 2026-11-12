@@ -37,4 +37,4 @@ function onBackdropClick() {
   </div>
 </template>
 
-<style scoped src="./PlayerModal.css"></style>
+<style scoped src="../styles/components/PlayerModal.css"></style>

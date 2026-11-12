@@ -14,4 +14,4 @@ const emit = defineEmits<{
   </footer>
 </template>
 
-<style scoped src="./LegalFooter.css"></style>
+<style scoped src="../styles/components/LegalFooter.css"></style>

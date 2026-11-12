@@ -79,4 +79,4 @@ function setFontSize(size: number) {
   </div>
 </template>
 
-<style scoped src="./SettingsModal.css"></style>
+<style scoped src="../styles/components/SettingsModal.css"></style>

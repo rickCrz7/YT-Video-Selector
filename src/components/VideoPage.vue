@@ -85,4 +85,4 @@ function onVideoDrop(videoId: string) {
   </div>
 </template>
 
-<style scoped src="./VideoPage.css"></style>
+<style scoped src="../styles/components/VideoPage.css"></style>

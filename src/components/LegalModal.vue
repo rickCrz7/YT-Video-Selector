@@ -229,4 +229,4 @@ const activeTab = ref<'privacy' | 'terms'>(props.initialTab)
   </div>
 </template>
 
-<style scoped src="./LegalModal.css"></style>
+<style scoped src="../styles/components/LegalModal.css"></style>

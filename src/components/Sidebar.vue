@@ -95,4 +95,4 @@ function cancelEdit() {
   </aside>
 </template>
 
-<style scoped src="./Sidebar.css"></style>
+<style scoped src="../styles/components/Sidebar.css"></style>

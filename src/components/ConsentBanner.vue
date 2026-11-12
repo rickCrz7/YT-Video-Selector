@@ -20,4 +20,4 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style scoped src="./ConsentBanner.css"></style>
+<style scoped src="../styles/components/ConsentBanner.css"></style>
