@@ -24,5 +24,5 @@ export interface Settings {
 
 export interface AppData {
   pages: Page[]
-  settings?: Settings
+  settings?: Partial<Settings>
 }
