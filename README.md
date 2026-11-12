@@ -54,6 +54,16 @@ The dev server starts automatically. For production builds:
 pnpm build
 ```
 
+## Tests
+
+```bash
+pnpm test
+pnpm exec playwright install chromium
+pnpm test:e2e
+```
+
+Vitest covers collection ordering, YouTube URLs, and saved data. Playwright starts the Vite dev server and tests the collection workflow in Chromium.
+
 ## License
 
 This project is open-source under the [MIT License](LICENSE).

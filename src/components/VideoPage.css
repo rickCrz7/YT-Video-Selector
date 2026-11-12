@@ -1,0 +1,29 @@
+.page-content {
+  padding: 24px;
+}
+.video-grid {
+  display: grid;
+  gap: 16px;
+}
+.empty-state {
+  padding: 60px 24px;
+  text-align: center;
+}
+.empty-state p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.empty-hint {
+  margin-top: 8px !important;
+  font-size: 0.875rem !important;
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding: 16px;
+  }
+  .video-grid {
+    gap: 12px;
+  }
+}
